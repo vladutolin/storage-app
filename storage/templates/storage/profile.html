@@ -1,0 +1,39 @@
+{% extends 'storage/base.html' %}
+
+{% block content %}
+
+<div>
+<h1>Ваш ник: {{ user.username }}</h1>
+<h2>Имя: {{ user.first_name}}</h2>
+<h2>Фамилия: {{ user.last_name }}</h2>
+<h2>Ваша почта: {{ user.email }}</h2>
+<a href="{% url 'editprofile' %}">Редактировать профиль</a>
+</div>
+<hr>
+<h1>Добавить пост</h1>
+<form action="{% url 'profile' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-error">{{ form.non_field_errors }}</div>
+    {% for f in form %}
+    <p><label class="form-label" for="{{f.id_for_label}}">{{f.label}}</label>{{ f }}</p>
+    <div class="form-error">{{f.errors}}</div>
+    {% endfor %}
+    <p>Нет файлов? <a href="{% url 'disk' %}">Загрузить</a></p>
+    <button type="submit">Добавить</button>
+</form>
+<p></p>
+
+<h1>Посты</h1>
+{% for p in posts %}
+<div>
+<div><h3>{{p.author}} | {{ p.time_create }}</h3></div>
+<div><h3>{{p.desc}}</h3></div>
+<div><h3><a href="{{ p.file.get_absolute_url }}">{{p.file}}</a></h3></div>
+</div>
+<hr>
+{% endfor %}
+
+
+
+{% endblock%}
+

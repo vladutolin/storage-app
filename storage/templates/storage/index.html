@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{title}}</title>
+	<!-- <link type="text/css" href="{% static 'women/css/styles.css' %}" rel="stylesheet" /> -->
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<!-- <link rel="shortcut icon" href="{% static 'women/images/main.ico' %}" type="image/x-icon"/> -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<div>
+    <h1>A-Storage</h1>
+	
+    <h2><a href="{% url 'login' %}">Войтии</a></h2>
+</div>
+
+<hr>
+<h2>A-Storage</h2>
+<p>Уникальное хранилище ждя ваших файлов</p>
+
+<div><p><a href="{% url 'register' %}">Регистраицмя</a></p></div>
+<div><p><a href="{% url 'login' %}">Войти</a></p></div>

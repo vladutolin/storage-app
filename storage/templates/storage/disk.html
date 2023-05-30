@@ -1,0 +1,49 @@
+{% extends 'storage/base.html' %}
+
+{% block content %}
+
+<div class="disk">
+    <div class="menu">
+    <form action="{% url 'disk' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-error">{{ upload.non_field_errors }}</div>
+        {% for f in upload %}
+        <p><label class="form-label" for="{{f.id_for_label}}">{{f.label}}</label>{{ f }}</p>
+        <div class="form-error">{{f.errors}}</div>
+        {% endfor %}
+        <button type="submit">Добавить</button>
+    </form>
+
+
+    <form action="{% url 'disk' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-error">{{ new_folder.non_field_errors }}</div>
+        {% for f in new_folder %}
+        <p><label class="form-label" for="{{f.id_for_label}}">{{f.label}}</label>{{ f }}</p>
+        <div class="form-error">{{f.errors}}</div>
+        {% endfor %}
+        <button type="submit">Добавить</button>
+    </form>
+    </div>
+
+    <div class="files">
+    <!-- <ul class="list-articles"> -->
+        {% for p in disk %}
+        <div class="list-f">
+            {% if p.file %}
+            <h2>{{p.filename |truncatechars:12}}</h2>
+            <div class="clear"></div>
+            <p><a href="{{ p.get_absolute_url }}">Скачать</a></p>
+            <p><a href="{% url 'delete_file' p.id %}">Удалить</a></p>
+            {% else %}
+            <a href="{{ p.get_absolute_url }}"><h2>{{ p.name }}</h2></a>
+            <p><a href="{% url 'delete_folder' p.id %}">Удалить</a></p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    <!-- </ul> -->
+    </div>
+</div>
+{% endblock %}

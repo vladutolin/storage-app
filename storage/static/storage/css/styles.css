@@ -1,0 +1,143 @@
+
+
+header {
+    
+    background-color: #fff;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    /* margin: 0; */
+    
+  }
+  
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+  }
+  
+  .left-section {
+    order: 1;
+    /* flex-basis: 15%; */
+    
+  }
+  .left-section a {
+    color: #000;
+    text-decoration: none;
+  }
+  
+  .center-section {
+    order: 2;
+    /* flex-grow: 1; */
+    text-align: center;
+    margin-right: 3%;
+  }
+  
+  .right-section {
+    order: 3;
+    text-align: right;
+    margin-right: 2%;
+  }
+  
+  nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  nav ul li {
+    display: inline-block;
+    margin: 0;
+    font-size: 18px;
+    
+    /* width: 50px;
+    height: 40px; */
+    /* border: 1px solid #000; */
+  }
+  
+  nav ul li a {
+    
+    color: #000;
+    text-decoration: none;
+    /* margin-right: 10px; */
+    margin-left: 10px;
+    font-weight: bold;
+    /* border: 1px solid #000; */
+    border: none;
+    padding: 20%;
+
+  }
+
+  /* nav ul li:hover {
+    color: #fff;
+    background-color: #000;
+  } */
+  nav ul li a:hover {
+    color: #fff;
+    background-color: #000;
+  }
+  nav ul li:last-child {
+    margin-right: 0;
+  }
+
+  .disk {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin-top: 3%;
+    background-color: aqua;
+    width: 95%;
+    border: none;
+    border-radius: 30px;
+    align-items:flex-start;
+    margin: auto;
+  }
+
+  .menu {
+    /* display: block; */
+    border: 1px solid #000;
+    background-color: #fff;
+    margin-bottom: 3%;
+    border-radius: 30px;
+    text-align: center;
+    padding: 2%;
+  }
+
+  .list-articles {
+    list-style-type: none;
+    
+  }
+  
+
+  .files {
+    display: flex;
+    flex-wrap: wrap;
+    
+    /* justify-content: space-evenly; */
+    align-content: flex-start;
+    border: 1px solid #000;
+    background-color: #fff;
+    border-radius: 50px;
+    /* text-align: center; */
+    width: 1050px; 
+    height: 700px;
+  }
+  
+  .list-f {
+    min-width: 150px; /* Желаемая ширина блока */
+    height: 150px; /* Желаемая высота блока */
+    border: 1px solid #000; /* Граница блока */
+    margin: 10px; /* Отступы между блоками */
+    /* padding: 10px; Внутренние отступы внутри блока */
+    text-align: center;
+  }
+  
+  .list-f h2 {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  .list-f p {
+    margin-top: 20%;
+  }
+  
