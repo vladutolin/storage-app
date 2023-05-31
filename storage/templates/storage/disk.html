@@ -33,14 +33,28 @@
         {% for p in disk %}
         <div class="list-f">
             {% if p.file %}
-            <h2>{{p.filename |truncatechars:12}}</h2>
+            <h2>{{p.filename |truncatechars:10}}</h2>
             <div class="clear"></div>
-            <p><a href="{{ p.get_absolute_url }}">Скачать</a></p>
-            <p><a href="{% url 'delete_file' p.id %}">Удалить</a></p>
+            <div class="dropdown">
+                <button class="dropbtn">...</button>
+                <div class="dropdown-content">
+                <a href="{{ p.get_absolute_url }}">Скачать</a>
+                <a href="{% url 'delete_file' p.id %}">Удалить</a>
+                </div>
+              </div>
+            <!-- <p><a href="{{ p.get_absolute_url }}">Скачать</a></p>
+            <p><a href="{% url 'delete_file' p.id %}">Удалить</a></p> -->
             {% else %}
-            <a href="{{ p.get_absolute_url }}"><h2>{{ p.name }}</h2></a>
-            <p><a href="{% url 'delete_folder' p.id %}">Удалить</a></p>
+            <h2><a href="{{ p.get_absolute_url }}">{{ p.name }}</a></h2>
+            <div class="dropdown">
+                <button class="dropbtn">...</button>
+                <div class="dropdown-content">
+                    <a href="{% url 'delete_folder' p.id %}">Удалить</a>
+                </div>
+              </div>
+            <!-- <p><a href="{% url 'delete_folder' p.id %}">Удалить</a></p> -->
             {% endif %}
+
         </div>
         {% endfor %}
     <!-- </ul> -->

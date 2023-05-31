@@ -3,45 +3,62 @@
 {% block content %}
 
  
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
+<div class="disk">
+    <div class="menu">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
 
-    <div class="form-error">{{ upload.non_field_errors }}</div>
-    {% for f in upload %}
-    <p><label class="form-label" for="{{f.id_for_label}}">{{f.label}}</label>{{ f }}</p>
-    <div class="form-error">{{f.errors}}</div>
-    {% endfor %}
-    <button type="submit">Добавить</button>
-</form>
+        <div class="form-error">{{ upload.non_field_errors }}</div>
+        {% for f in upload %}
+        <p><label class="form-label" for="{{f.id_for_label}}">{{f.label}}</label>{{ f }}</p>
+        <div class="form-error">{{f.errors}}</div>
+        {% endfor %}
+        <button type="submit">Добавить</button>
+    </form>
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
 
-    <div class="form-error">{{ new_folder.non_field_errors }}</div>
-    {% for f in new_folder %}
-    <p><label class="form-label" for="{{f.id_for_label}}">{{f.label}}</label>{{ f }}</p>
-    <div class="form-error">{{f.errors}}</div>
-    {% endfor %}
-    <button type="submit">Добавить</button>
-</form>
-<p></p>
-<ul class="list-articles">
-	{% for p in disk %}
-	<li><div class="article-panel">
-		<p class="first">Категория: {{p.cat_id}}</p>
-		<p class="last">Дата: {{p.time_update|date:"d-m-Y H:i:s"}}</p>
-	</div>
-    {% if p.file %}
-    <h2>{{p.file}}</h2>
-	<div class="clear"></div>
-	<p class="link-read-post"><a href="{{ p.get_absolute_url }}">Скачать</a></p>
-    <p class="link-read-post"><a href="{% url 'delete_file' p.id %}">Удалить</a></p>
-	{% else %}
-	<a href="{{ p.get_absolute_url }}"><h2>{{ p.name }}</h2></a>
-    <p class="link-read-post"><a href="{% url 'delete_folder' p.id %}">Удалить</a></p>
-	{% endif %}
-	
-			</li>
-	{% endfor %}
-</ul>
+    <form  method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-error">{{ new_folder.non_field_errors }}</div>
+        {% for f in new_folder %}
+        <p><label class="form-label" for="{{f.id_for_label}}">{{f.label}}</label>{{ f }}</p>
+        <div class="form-error">{{f.errors}}</div>
+        {% endfor %}
+        <button type="submit">Добавить</button>
+    </form>
+    </div>
+
+    <div class="files">
+        <!-- <ul class="list-articles"> -->
+            {% for p in disk %}
+            <div class="list-f">
+                {% if p.file %}
+                <h2>{{p.filename |truncatechars:10}}</h2>
+                <div class="clear"></div>
+                <div class="dropdown">
+                    <button class="dropbtn">...</button>
+                    <div class="dropdown-content">
+                    <a href="{{ p.get_absolute_url }}">Скачать</a>
+                    <a href="{% url 'delete_file' p.id %}">Удалить</a>
+                    </div>
+                  </div>
+                <!-- <p><a href="{{ p.get_absolute_url }}">Скачать</a></p>
+                <p><a href="{% url 'delete_file' p.id %}">Удалить</a></p> -->
+                {% else %}
+                <h2><a href="{{ p.get_absolute_url }}">{{ p.name }}</a></h2>
+                <div class="dropdown">
+                    <button class="dropbtn">...</button>
+                    <div class="dropdown-content">
+                        <a href="{% url 'delete_folder' p.id %}">Удалить</a>
+                    </div>
+                  </div>
+                <!-- <p><a href="{% url 'delete_folder' p.id %}">Удалить</a></p> -->
+                {% endif %}
+    
+            </div>
+            {% endfor %}
+        <!-- </ul> -->
+        </div>
+</div>
 {% endblock %}

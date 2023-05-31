@@ -19,9 +19,9 @@ class File(models.Model):
     time_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
     folder = models.ForeignKey('Folder', on_delete=models.CASCADE, null=True)
     
-    # def __str__(self):
-    #     ind = self.file.name.rfind('/')
-    #     return self.file.name[ind+1:]
+    def __str__(self):
+        ind = self.file.name.rfind('/')
+        return self.file.name[ind+1:]
     
     def filename(self):
         ind = self.file.name.rfind('/')

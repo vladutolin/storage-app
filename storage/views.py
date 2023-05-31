@@ -111,6 +111,8 @@ class Disk(LoginRequiredMixin, CreateView, ListView):
         context = super().get_context_data(**kwargs)
         context['upload'] = self.form_class()
         context['new_folder'] = self.form_class_folder()
+        context['selected'] = 1
+        context['title'] = 'Диск'
         return context
     
     def post(self, request, *args, **kwargs):
@@ -177,6 +179,8 @@ class DiskFolder(LoginRequiredMixin, CreateView, ListView):
         context = super().get_context_data(**kwargs)
         context['upload'] = self.form_class()
         context['new_folder'] = self.form_class_folder()
+        context['selected'] = 1
+        context['title'] = 'Диск'
         return context
     
     # def form_valid(self, form):
@@ -206,6 +210,11 @@ class DeleteFile(LoginRequiredMixin, DeleteView):
     template_name = 'storage/delete_file.html'
     success_url = reverse_lazy('disk')
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Удаление файла'
+        return context
+    
     def form_valid(self, request, *args, **kwargs):
         # Получить объект файла
         file_object = self.get_object()
@@ -230,6 +239,11 @@ class DeleteFolder(LoginRequiredMixin, DeleteView):
     model = Folder
     template_name = 'storage/delete_folder.html'
     success_url = reverse_lazy('disk')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Удаление папки'
+        return context
     
     def form_valid(self, request, *args, **kwargs):
         # Получить объект файла
@@ -262,6 +276,10 @@ class Profile(LoginRequiredMixin, CreateView, ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        subs = Subscription.objects.filter(subscriberTo=self.request.user).count()
+        context['subs'] = subs
+        context['selected'] = 3
+        context['title'] = 'Профиль'
         return context
     
     def get_form_kwargs(self):
@@ -285,6 +303,11 @@ class EditProfile(LoginRequiredMixin, UpdateView):
     template_name = 'storage/editprofile.html'
     success_url = 'profile'
     form_class = EditProfileForm
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Редактирование профиля'
+        return context
 
     def get_object(self, queryset=None):
         return self.request.user
@@ -313,6 +336,7 @@ class UserProfile(LoginRequiredMixin, CreateView, DetailView):
             context['subs'] = 0
         else:
             context['subs'] = 1
+        context['title'] = user.username
         return context
     
     def post(self, request):
@@ -385,9 +409,41 @@ class Lenta(LoginRequiredMixin, ListView):
         comments = Comment.objects.filter(post__in=posts)
         context['posts'] = posts
         context['comments'] = comments
+        context['selected'] = 2
         return context
     
     # def get_queryset(self):
     #     sub = Subscription.objects.filter(subscriber=self.request.user).values_list('subscriberTo', flat=True)
     #     posts = Posts.objects.filter(authot__in=sub)
     #     return posts
+    
+
+class ShowSubs(LoginRequiredMixin, ListView):
+    model = Subscription
+    template_name = 'storage/subs.html'
+    context_object_name = 'subs'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Подписки'
+        return context
+    
+    def get_queryset(self):
+        queryset = Subscription.objects.filter(subscriber=self.request.user)
+        return queryset
+    
+    
+class Subscribers(LoginRequiredMixin, ListView):
+    model = Subscription
+    template_name = 'storage/subscribers.html'
+    context_object_name = 'subs'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Подписчики'
+        return context
+    
+    def get_queryset(self):
+        queryset = Subscription.objects.filter(subscriberTo=self.request.user)
+        return queryset
+    

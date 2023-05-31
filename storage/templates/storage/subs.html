@@ -1,0 +1,15 @@
+{% extends 'storage/base.html' %}
+
+{% block content %}
+
+<h2>Подписки:</h2>
+
+{% for s in subs %}
+<div>
+    <h3><a href="{%  url 'user_profile' s.subscriberTo.username %}">{{ s.subscriberTo }}</a></h3>
+</div>
+<p></p>
+<hr>
+{% endfor %}
+
+{% endblock %}

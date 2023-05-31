@@ -7,6 +7,7 @@
 <h2>Имя: {{ user.first_name}}</h2>
 <h2>Фамилия: {{ user.last_name }}</h2>
 <h2>Ваша почта: {{ user.email }}</h2>
+<h2><a href="{% url 'subscribers' %}">Подписчики:</a> {{ subs }}</h2>
 <a href="{% url 'editprofile' %}">Редактировать профиль</a>
 </div>
 <hr>

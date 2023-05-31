@@ -19,4 +19,6 @@ urlpatterns = [
     path('plus_sub/<str:username>/', plus_sub, name='plus_sub'),
     path('minus_sub/<str:username>/', minus_sub, name='minus_sub'),
     path('lenta/', Lenta.as_view(), name='lenta'),
+    path('subs/', ShowSubs.as_view(), name='subs'),
+    path('subscribers/', Subscribers.as_view(), name='subscribers'),
 ]

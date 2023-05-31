@@ -16,14 +16,27 @@
 			</div>
 			<div class="center-section">
 				<ul>
+					{% if selected == 1 %}
+					<li><a class="selected" href="{% url 'disk' %}">Диск</a></li>
+					<li><a href="{% url 'lenta' %}">Лента</a></li>
+					{% elif selected == 2 %}
+					<li><a href="{% url 'disk' %}">Диск</a></li>
+					<li><a class="selected" href="{% url 'lenta' %}">Лента</a></li>
+					{% else %}
 					<li><a href="{% url 'disk' %}">Диск</a></li>
 					<li><a href="{% url 'lenta' %}">Лента</a></li>
+					{% endif %}
 				</ul>
 			</div>
 			<div class="right-section">
 				<ul>
+					{% if selected == 3 %}
+					<li><a class="selected" href="{% url 'profile' %}">{{user.username}}</a></li>
+					<li><a href="{% url 'logout' %}">Выйти</a></li>
+					{% else %}
 					<li><a href="{% url 'profile' %}">{{user.username}}</a></li>
 					<li><a href="{% url 'logout' %}">Выйти</a></li>
+					{% endif %}
 				</ul>
 			</div>
 		</nav>

@@ -3,7 +3,7 @@
 {% block content %}
 
 <h1>Лента</h1>
-<h2>Подписки: {{ subs }}</h2>
+<h2><a href="{% url 'subs' %}">Подписки:</a> {{ subs }}</h2>
 
 <h1>Посты</h1>
 {% for p in posts %}
@@ -12,7 +12,7 @@
 <div><h3>{{p.desc}}</h3></div>
 <div><h3><a href="{{ p.file.get_absolute_url }}">{{p.file}}</a></h3></div>
 </div>
-<hr>
+
 <h2>Комментарии</h2>
 {% for c in comments%}
     {% if c.post == p %}
@@ -30,6 +30,7 @@
     {% endfor %}
     <button type="submit">Добавить</button>
 </form>
+
 <p></p>
 <hr>
 {% endfor %}
