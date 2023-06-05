@@ -15,6 +15,10 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth import logout
 from django.http import FileResponse, HttpResponseForbidden
 from django.conf import settings
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+
+channel_layer = get_channel_layer()
 
 from .models import *
 from .forms import *
@@ -127,6 +131,15 @@ class Disk(LoginRequiredMixin, CreateView, ListView):
             folder = form_folder.save(commit=False)
             folder.owner = self.request.user
             folder.save()
+        
+        channel_layer = get_channel_layer()
+        async def send_disk_message():
+            await channel_layer.group_send(
+                'disk_group',
+                {'type': 'disk_message', 'content': 'Новое сообщение в ленте'}
+            )
+    
+        async_to_sync(send_disk_message)()
 
         return redirect('disk')
     
@@ -228,6 +241,15 @@ class DeleteFile(LoginRequiredMixin, DeleteView):
             os.remove(file_path)
             
         file_object.delete()
+        
+        channel_layer = get_channel_layer()
+        async def send_disk_message():
+            await channel_layer.group_send(
+                'disk_group',
+                {'type': 'disk_message', 'content': 'Новое сообщение в ленте'}
+            )
+    
+        async_to_sync(send_disk_message)()
 
         return redirect('disk')
     
@@ -288,15 +310,25 @@ class Profile(LoginRequiredMixin, CreateView, ListView):
         return kwargs
     
     def post(self, request):
+        
         form = self.form_class(request.POST, user=self.request.user)
         if form.is_valid():
             form.instance.author = self.request.user
             form.save()
+        channel_layer = get_channel_layer()
+        async def send_lenta_message():
+            await channel_layer.group_send(
+                'lenta_group',
+                {'type': 'lenta_message', 'content': 'Новое сообщение в ленте'}
+            )
+    
+        async_to_sync(send_lenta_message)()
         return redirect('profile')
     
     def get_queryset(self):
          return Posts.objects.filter(author=self.request.user)
      
+
 
 class EditProfile(LoginRequiredMixin, UpdateView):
     model = User
@@ -390,13 +422,15 @@ def add_comment(request, post_id):
             comment.post = post
             comment.author = request.user
             comment.save()
-    
-    return redirect('user_profile', username=post.author.username)
+    previous_page = request.META.get('HTTP_REFERER')
+    return redirect(previous_page)
+    #return redirect('user_profile', username=post.author.username)
 
 
-class Lenta(LoginRequiredMixin, ListView):
+class Lenta(LoginRequiredMixin, CreateView, ListView):
     model = Posts
     template_name = 'storage/lenta.html'
+    form_class = AddComment
     context_object_name = 'lenta'
     
     def get_context_data(self, **kwargs):
@@ -411,11 +445,24 @@ class Lenta(LoginRequiredMixin, ListView):
         context['comments'] = comments
         context['selected'] = 2
         return context
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        # button_value = request.POST.get('sub')
+        
+        if form.is_valid():
+            form.instance.author = self.request.user
+            form.save()
+        
+        
+        # if button_value == 'submit':
+        #     userTo = User.objects.get(username=self.kwargs['username'])
+        #     new_sub = Subscription(subscriber=self.request.user, subscriberTo=userTo)
+        #     new_sub.save()
+        
+        # return redirect(reverse('profile', kwargs={'username': self.kwargs['username']},))
+        return redirect('lenta')
     
-    # def get_queryset(self):
-    #     sub = Subscription.objects.filter(subscriber=self.request.user).values_list('subscriberTo', flat=True)
-    #     posts = Posts.objects.filter(authot__in=sub)
-    #     return posts
     
 
 class ShowSubs(LoginRequiredMixin, ListView):
