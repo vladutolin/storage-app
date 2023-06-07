@@ -3,29 +3,38 @@
 {% block content %}
 
  
+
 <div class="disk">
     <div class="menu">
-    <form method="post" enctype="multipart/form-data">
+    <form  method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
-        <div class="form-error">{{ upload.non_field_errors }}</div>
+        <!-- <div class="form-error">{{ upload.non_field_errors }}</div>
         {% for f in upload %}
-        <p><label class="form-label" for="{{f.id_for_label}}">{{f.label}}</label>{{ f }}</p>
+        <p><label class="form-label" >{{f.label}}</label></p><p>{{ f }}</p>
         <div class="form-error">{{f.errors}}</div>
-        {% endfor %}
-        <button type="submit">Добавить</button>
+        {% endfor %} -->
+
+        <p><label class="form-label">{{ upload.file.label_tag }}</label></p>
+        <!-- <p> {{ upload.file}}</p> -->
+        <label>
+            
+        <input type="file" name="file" class="file-up">
+        </label>
+        <p></p>
+        <button class="disk-b" type="submit">Загрузить</button>
     </form>
 
 
-    <form  method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
         <div class="form-error">{{ new_folder.non_field_errors }}</div>
         {% for f in new_folder %}
-        <p><label class="form-label" for="{{f.id_for_label}}">{{f.label}}</label>{{ f }}</p>
+        <p><label class="form-label" for="{{f.id_for_label}}">{{f.label}}</label></p><p>{{ f }}</p>
         <div class="form-error">{{f.errors}}</div>
         {% endfor %}
-        <button type="submit">Добавить</button>
+        <button class="disk-b" type="submit">Создать</button>
     </form>
     </div>
 

@@ -6,9 +6,7 @@ import os
 
 
 def user_directory_path(instance, filename):
-    # получаем имя пользователя из поля модели
     username = instance.owner.username
-    # формируем путь до директории пользователя
     return os.path.join('uploads', username, filename)
 
         
@@ -65,6 +63,9 @@ class Posts(models.Model):
     time_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
     desc = models.CharField(max_length=400)
     file = models.ForeignKey(File, on_delete=models.CASCADE)
+    
+    class Meta:
+        ordering = ['-time_create']
 
 
 class Comment(models.Model):
@@ -72,3 +73,6 @@ class Comment(models.Model):
     time_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     text = models.CharField(max_length=400)
     post = models.ForeignKey(Posts, on_delete=models.CASCADE)
+    
+    class Meta:
+        ordering = ['-time_create']

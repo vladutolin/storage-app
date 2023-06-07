@@ -6,10 +6,10 @@ from django.contrib.auth.models import User
 from django.db import IntegrityError
 
 class RegisterUserForm(UserCreationForm):
-    username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-input'}))
-    email = forms.EmailField(label='Email', widget=forms.EmailInput(attrs={'class': 'form-input'}))
-    password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
-    password2 = forms.CharField(label='Повторите Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+    username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Введите логин'}))
+    email = forms.EmailField(label='Email', widget=forms.EmailInput(attrs={'class': 'form-input', 'placeholder': 'Введите почту'}))
+    password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input', 'placeholder': 'Введите пароль'}))
+    password2 = forms.CharField(label='Повторите Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input', 'placeholder': 'Введите пароль'}))
 
     
     class Meta:
@@ -24,14 +24,15 @@ class RegisterUserForm(UserCreationForm):
    
    
 class LoginUserForm(AuthenticationForm):
-    username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-input'}))
-    password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+    username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-input' , 'placeholder': 'Введите логин'}))
+    password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input', 'placeholder': 'Введите пароль'}))
 
 
 class AddFileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        #self.user = user
+        self.fields['file'].label = 'Загрузить файл' 
+        
         
     class Meta:
         model = File
@@ -40,6 +41,8 @@ class AddFileForm(forms.ModelForm):
 class AddFolderForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['name'].label = 'Создать папку' 
+        self.fields['name'].widget.attrs.update({'class': 'form-input', 'placeholder': 'Название папки'})
         
     class Meta:
         model = Folder
@@ -86,13 +89,3 @@ class AddComment(forms.ModelForm):
         widgets = {
             'text': forms.Textarea(attrs={'rows': 3}),
         }
-
-
-# class PlusSub(forms.ModelForm):
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-        
-#     class Meta:
-#         model = Subscription
-        
-        

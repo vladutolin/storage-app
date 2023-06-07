@@ -29,23 +29,16 @@ class LentaConsumer(AsyncWebsocketConsumer):
         pass
 
     async def lenta_message(self, event):
-        csrf_token = self.scope.get('csrf_token')
-        # sub = Subscription.objects.filter(subscriber=self.scope.get('user')).values_list('subscriberTo', flat=True)
-        # posts = Posts.objects.filter(author__in=sub)
-        # comments = Comment.objects.filter(post__in=posts)
-        # html = render_to_string('storage/post_template.html', {'posts': posts, 'comments': comments})
-        html = await self.get_posts(csrf_token)
+        html = await self.get_posts()
         await self.send(text_data=html)
     
-    
     @database_sync_to_async
-    def get_posts(self, csrf_token):
-        print(self.scope.get('user'))
+    def get_posts(self):
         sub = Subscription.objects.filter(subscriber=self.scope.get('user')).values_list('subscriberTo', flat=True)
         posts = Posts.objects.filter(author__in=sub)
         comments = Comment.objects.filter(post__in=posts)
         form_class = AddComment
-        html = render_to_string('storage/post_template.html', {'posts': posts, 'comments': comments, 'form':form_class(),'csrf_token': csrf_token})
+        html = render_to_string('storage/post_template.html', {'posts': posts, 'comments': comments, 'form':form_class()})
         return html
 
 class DiskConsumer(AsyncWebsocketConsumer):
@@ -68,7 +61,5 @@ class DiskConsumer(AsyncWebsocketConsumer):
     def get_items(self):
         q = Folder.objects.filter(owner=self.scope.get('user'), parent=None)
         q1 = File.objects.filter(owner=self.scope.get('user'), folder=None)
-    
-       
         html = render_to_string('storage/disk_update.html', {'folder': q, 'files': q1 })
         return html

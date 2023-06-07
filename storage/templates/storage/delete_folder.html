@@ -1,7 +1,7 @@
 {% extends 'storage/base.html' %}
 
 {% block content %}
-  <h2>Удаление файла</h2>
+  <h2>Удаление папки</h2>
   <p>Вы уверены, что хотите удалить папку "{{ object.name }}"?</p>
   <form method="post">
     {% csrf_token %}

@@ -32,10 +32,8 @@ class Home(View):
         if request.user.is_authenticated:
             return redirect('disk')
         context = {
-            'title': 'A-Storage'
+            'title': 'Storage'
         }
-    
-    
         return render(request, 'storage/index.html', context)
 
 
@@ -103,13 +101,9 @@ class Disk(LoginRequiredMixin, CreateView, ListView):
     success_url = reverse_lazy('disk')
     raise_exception = True
     
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-    
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
         return super().get(request, *args, **kwargs)
-    
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -122,7 +116,6 @@ class Disk(LoginRequiredMixin, CreateView, ListView):
     def post(self, request, *args, **kwargs):
         form_file = self.form_class(request.POST, request.FILES)
         form_folder = self.form_class_folder(request.POST)
-
         if form_file.is_valid():
             form_file.instance.owner = self.request.user
             form_file.save()
@@ -131,16 +124,13 @@ class Disk(LoginRequiredMixin, CreateView, ListView):
             folder = form_folder.save(commit=False)
             folder.owner = self.request.user
             folder.save()
-        
         channel_layer = get_channel_layer()
         async def send_disk_message():
             await channel_layer.group_send(
                 'disk_group',
                 {'type': 'disk_message', 'content': 'Новое сообщение в ленте'}
             )
-    
         async_to_sync(send_disk_message)()
-
         return redirect('disk')
     
     def get_queryset(self):
@@ -157,16 +147,16 @@ class DiskFolder(LoginRequiredMixin, CreateView, ListView):
     context_object_name = 'disk'
     form_class = AddFileForm
     form_class_folder = AddFolderForm
-    #success_url = reverse_lazy('disk')
+    
     raise_exception = True
     
     def get(self, request, folder_path):
-        # Проверка наличия папки в базе данных
+        
         try:
             folder = Folder.objects.filter(path=folder_path, owner=request.user)[0]
         except Folder.DoesNotExist:
             return HttpResponseForbidden("У вас нет доступа к этой папке.")
-        # Проверка владения папкой
+        
         if folder.owner != request.user:
             return HttpResponseForbidden("У вас нет доступа к этой папке.")
         return super().get(request, folder_path)
@@ -196,11 +186,6 @@ class DiskFolder(LoginRequiredMixin, CreateView, ListView):
         context['title'] = 'Диск'
         return context
     
-    # def form_valid(self, form):
-    #     form.instance.owner = self.request.user
-    #     form.instance.folder = Folder.objects.filter(name=self.kwargs['folder_path'], owner=self.request.user)[0]
-    #     print(self.request.path)
-    #     return super().form_valid(form)
     
     def get_queryset(self):
         q = list(Folder.objects.filter(owner=self.request.user, parent__path=self.kwargs['folder_path']))
@@ -223,35 +208,29 @@ class DeleteFile(LoginRequiredMixin, DeleteView):
     template_name = 'storage/delete_file.html'
     success_url = reverse_lazy('disk')
     
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Удаление файла'
-        return context
-    
     def form_valid(self, request, *args, **kwargs):
-        # Получить объект файла
         file_object = self.get_object()
-
         b = os.path.join(settings.BASE_DIR, 'media')
-        # Удалить файл с компьютера
         file_path =os.path.join(b, str(file_object.file))
-        print(file_path)
-        print(file_path)
         if os.path.exists(file_path):
             os.remove(file_path)
-            
         file_object.delete()
         
         channel_layer = get_channel_layer()
         async def send_disk_message():
             await channel_layer.group_send(
                 'disk_group',
-                {'type': 'disk_message', 'content': 'Новое сообщение в ленте'}
+                {'type': 'disk_message', 'content': 'Удален файл'}
             )
     
         async_to_sync(send_disk_message)()
 
         return redirect('disk')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Удаление файла'
+        return context
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -268,13 +247,10 @@ class DeleteFolder(LoginRequiredMixin, DeleteView):
         return context
     
     def form_valid(self, request, *args, **kwargs):
-        # Получить объект файла
-        folder= self.get_object()
-        
+        folder = self.get_object()
         file = File.objects.filter(folder=folder)
         b = os.path.join(settings.BASE_DIR, 'media')
         for i in file:
-            # Удалить файл с компьютера
             file_path =os.path.join(b, str(i.file))
             print(file_path)
             if os.path.exists(file_path):
@@ -373,18 +349,12 @@ class UserProfile(LoginRequiredMixin, CreateView, DetailView):
     
     def post(self, request):
         form = self.form_class(request.POST)
-        # button_value = request.POST.get('sub')
+        
         
         if form.is_valid():
             form.instance.author = self.request.user
             form.save()
         
-        # if button_value == 'submit':
-        #     userTo = User.objects.get(username=self.kwargs['username'])
-        #     new_sub = Subscription(subscriber=self.request.user, subscriberTo=userTo)
-        #     new_sub.save()
-        
-        # return redirect(reverse('profile', kwargs={'username': self.kwargs['username']},))
         return redirect('user_profile', username=self.kwargs['username'])
 
 @login_required
@@ -424,7 +394,7 @@ def add_comment(request, post_id):
             comment.save()
     previous_page = request.META.get('HTTP_REFERER')
     return redirect(previous_page)
-    #return redirect('user_profile', username=post.author.username)
+    
 
 
 class Lenta(LoginRequiredMixin, CreateView, ListView):
@@ -454,13 +424,6 @@ class Lenta(LoginRequiredMixin, CreateView, ListView):
             form.instance.author = self.request.user
             form.save()
         
-        
-        # if button_value == 'submit':
-        #     userTo = User.objects.get(username=self.kwargs['username'])
-        #     new_sub = Subscription(subscriber=self.request.user, subscriberTo=userTo)
-        #     new_sub.save()
-        
-        # return redirect(reverse('profile', kwargs={'username': self.kwargs['username']},))
         return redirect('lenta')
     
     
