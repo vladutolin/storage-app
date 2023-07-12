@@ -17,7 +17,7 @@
 {% endfor %}
 <h2>Оставить комменатрий</h2>
 <form action="{% url 'add_comment' p.pk %}" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
+    <!-- {% csrf_token %} -->
     <div class="form-error">{{ form.non_field_errors }}</div>
     {% for f in form %}
     <p><label class="form-label" for="{{f.id_for_label}}">{{f.label}}</label>{{ f }}</p>
@@ -29,5 +29,5 @@
 <p></p>
 </div>
 <p></p>
-<hr>
+<hr>c
 {% endfor %}

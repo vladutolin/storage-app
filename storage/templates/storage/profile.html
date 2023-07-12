@@ -21,18 +21,18 @@
             <h2><a href="{% url 'subscribers' %}">Подписчики:</a> {{ subs }}</h2>
             <a href="{% url 'editprofile' %}">Редактировать профиль</a>
         </div>
-        <hr>
+        
         <div class="profile">
         <h1>Добавить пост</h1>
         <form action="{% url 'profile' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-error">{{ form.non_field_errors }}</div>
             {% for f in form %}
-            <p><label class="form-label" for="{{f.id_for_label}}">{{f.label}}</label>{{ f }}</p>
+            <p><label class="form-label" for="{{f.id_for_label}}">{{f.label}}: </label>{{ f }}</p>
             <div class="form-error">{{f.errors}}</div>
             {% endfor %}
             <p>Нет файлов? <a href="{% url 'disk' %}">Загрузить</a></p>
-            <button type="submit">Добавить</button>
+            <button type="submit" class="login-b">Добавить</button>
         </form>
         </div>
         <p></p>

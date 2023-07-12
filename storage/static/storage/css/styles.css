@@ -112,12 +112,13 @@ header {
   
   .list-f {
     display: flex;
-    align-items: baseline;
+    align-items:end;
     justify-content: space-between;
-    min-width: 150px; 
+    flex-direction: column;
+    width: 150px; 
     height: 150px; 
     margin: 10px; 
-    border-radius: 30px;
+    border-radius: 15px;
     text-align: center;
     background-color: #fff;
     box-shadow: 0 0 10px #ccc;
@@ -127,14 +128,22 @@ header {
     background-color: #ebf9fc;
   }
   
+
+  .list-f img {
+    align-self: center;
+
+  }
   .list-f h2 {
+    align-self: center;
     flex-grow: 1;
     font-size: 16px;
     margin-bottom: 10px;
   }
 
   .list-f a {
-    flex-grow: 1;
+    align-self:center;
+    text-decoration: none;
+    color: #000;
   }
   
   .list-f p {
@@ -384,9 +393,10 @@ header {
   flex-direction: column;
   border-radius: 35px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  width: 600px;
+  width: 80%;
   align-self: center;
   padding: 5px;
+  word-wrap: break-word;
 }
 
 .tog-btn {
@@ -401,8 +411,23 @@ header {
 .profile {
   display: flex;
   flex-direction: column;
-  border-radius: 35px;
+  /* border-radius: 15px; */
   width: 80%;
   justify-content: flex-start;
   margin-left: 10%;
+  border-bottom: 2px solid #ccc;
+  padding: 10px;
+}
+
+.profile a {
+  color: #000;
+}
+
+.folder-icon{
+  height: 70px;
+  width: 70px;
+}
+
+.lenta-block a {
+  color: #000;
 }
